@@ -4,6 +4,13 @@ import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/repositories/catalog_repository.dart';
 import 'package:ecommerce_app/data/repositories/catalog_repository_impl.dart';
 import 'package:ecommerce_app/data/sources/local_json_source.dart';
+import 'package:ecommerce_app/presentation/pages/cart_page.dart';
+import 'package:ecommerce_app/presentation/viewmodels/cart_viewmodel.dart';
+import 'package:ecommerce_app/data/repositories/cart_repository_impl.dart';
+import 'package:provider/provider.dart';
+
+import '../../domain/entities/cart_item.dart';
+
 
 class ProductPage extends StatefulWidget {
   final int productId;
@@ -294,24 +301,24 @@ class _ProductViewState extends State<_ProductView> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          if (widget.onAddToCart != null) {
-                            widget.onAddToCart!(p);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Produit ajouté au panier'),
-                                backgroundColor: Colors.green,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          } else {
-                            // Integration TODO for Personne A
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('TODO: intégrer au panier (personne A)'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          }
+                          final cartVM = context.read<CartViewModel>();
+
+                          cartVM.addItem(
+                            CartItem(
+                              productId: p.id,
+                              title: p.title,
+                              price: p.price,
+                              quantity: 1,
+                              thumbnail: p.thumbnail,
+                            ),
+                          );
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const CartPage(),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange,
