@@ -54,7 +54,7 @@ class _ProductPageState extends State<ProductPage> {
         elevation: 1,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
+          onPressed: () => context.pop(),
         ),
         actions: [const CartIcon()],
       ),
